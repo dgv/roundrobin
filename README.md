@@ -1,11 +1,11 @@
 # roundrobin
 
 ### usage
-`zig fetch -save https://github.com/dgv/master/head/master.tar.gz`
+`zig fetch -save https://github.com/dgv/roundrobin/archive/refs/heads/main.zip`
 
 ```zig
 const print = @import("std").debug.print;
-const roundrobin = @import("roundrobin");
+const roundrobin = @import("roundrobin").RoundRobin;
 
 pub fn main() !void {
     var ips = [_]std.net.Address{
@@ -14,12 +14,12 @@ pub fn main() !void {
         try std.net.Address.parseIp("100.123.40.50", 0),
         try std.net.Address.parseIp("100.123.60.70", 0),
     };
-    const rr = try RoundRobin.init(&ips);
-    _ = rr.next(); // "100.123.10.20"
-    _ = rr.next(); // "100.123.20.30"
-    _ = rr.next(); // "100.123.40.50"
-    _ = rr.next(); // "100.123.60.70"
-    _ = rr.next(); // "100.123.10.20"
-    print("{s}\n", .{rr.next().host} ); // "100.123.20.30"
+    const rr = try roundrobin.init(&ips);
+    _ = rr.next(); // "100.123.10.20:0"
+    _ = rr.next(); // "100.123.20.30:0"
+    _ = rr.next(); // "100.123.40.50:0"
+    _ = rr.next(); // "100.123.60.70:0"
+    _ = rr.next(); // "100.123.10.20:0"
+    print("{?}\n", .{rr.next()} ); // "100.123.20.30:0"
 }
 ```
